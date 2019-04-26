@@ -15,6 +15,7 @@ export default class LiveChat extends Component {
     this.defineStyles();
     this.state = {
       isChatOn: false,
+      chatHeight: height - 150,
       bubble: props.bubble ? (
         props.bubble
       ) : (
@@ -66,9 +67,18 @@ export default class LiveChat extends Component {
     this.setState({isChatOn: false});
   };
 
+  onContainerLayout = e => {
+    const {
+      nativeEvent: {
+        layout: {height: h},
+      },
+    } = e;
+    this.setState({chatHeight: h});
+  };
+
   render() {
     return (
-      <View style={this.styles.container}>
+      <View style={this.styles.container} onLayout={this.onContainerLayout}>
         {this.props.showBubble ? (
           <ChatBubble
             left={this.props.bubbleLeft}
@@ -78,11 +88,13 @@ export default class LiveChat extends Component {
             disabled={this.props.movable}
           />
         ) : null}
-        <Chat
-          {...this.props}
-          isChatOn={this.state.isChatOn}
-          closeChat={this.closeChat}
-        />
+        <View style={{flex: 1, minHeight: this.state.chatHeight}}>
+          <Chat
+            {...this.props}
+            isChatOn={this.state.isChatOn}
+            closeChat={this.closeChat}
+          />
+        </View>
       </View>
     );
   }
