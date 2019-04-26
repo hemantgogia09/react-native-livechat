@@ -115,6 +115,7 @@ LiveChat.propTypes = {
   chatAnimation: PropTypes.string,
   showNavigationBar: PropTypes.bool,
   showBubble: PropTypes.bool,
+  showGreetingBubble: PropTypes.bool,
 };
 
 LiveChat.defaultProps = {
@@ -132,4 +133,5 @@ LiveChat.defaultProps = {
   chatAnimation: null,
   showNavigationBar: false,
   showBubble: false,
+  showGreetingBubble: false,
 };

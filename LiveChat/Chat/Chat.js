@@ -66,6 +66,14 @@ export default class Chat extends React.Component {
 
   handleAgentChanged = newAgent => {
     this.addUser(newAgent, 'agent');
+    if (this.props.showGreetingBubble) {
+      this.addMessage({
+        id: '1',
+        timestamp: +new Date(),
+        authorId: newAgent.id,
+        text: this.props.greeting,
+      });
+    }
   };
 
   hendleVisitorData = visitorData => {
@@ -160,11 +168,13 @@ export default class Chat extends React.Component {
               closeChat={this.closeChat}
             />
           ) : null}
-          <Text style={styles.status}>
-            {this.state.onlineStatus
-              ? this.props.greeting
-              : this.props.noAgents}
-          </Text>
+          {!this.props.showGreetingBubble ? (
+            <Text style={styles.status}>
+              {this.state.onlineStatus
+                ? this.props.greeting
+                : this.props.noAgents}
+            </Text>
+          ) : null}
           <View style={{flex: 1}}>
             <GiftedChat
               messages={this.state.messages}
@@ -189,6 +199,7 @@ Chat.propTypes = {
   isChatOn: PropTypes.bool.isRequired,
   greeting: PropTypes.string.isRequired,
   noAgents: PropTypes.string.isRequired,
+  showGreetingBubble: PropTypes.bool.isRequired,
 };
 
 const styles = StyleSheet.create({
