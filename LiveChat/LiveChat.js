@@ -30,9 +30,6 @@ export default class LiveChat extends Component {
       });
     }
     props.onLoaded(GLOBAL.visitorSDK);
-    if (!props.showBubble) {
-      this.openChat();
-    }
   }
 
   defineStyles() {
@@ -53,6 +50,12 @@ export default class LiveChat extends Component {
         flex: 1,
       },
     });
+  }
+
+  componentDidMount() {
+    if (!this.props.showBubble) {
+      this.openChat();
+    }
   }
 
   openChat = () => {
