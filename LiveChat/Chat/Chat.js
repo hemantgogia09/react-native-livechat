@@ -1,13 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, Dimensions, Platform } from 'react-native';
-import { init } from '@livechat/livechat-visitor-sdk';
-import { View } from 'react-native-animatable';
+import {StyleSheet, Text, Dimensions, Platform} from 'react-native';
+import {init} from '@livechat/livechat-visitor-sdk';
+import {View} from 'react-native-animatable';
 import PropTypes from 'prop-types';
-import { GiftedChat } from 'react-native-gifted-chat';
+import {GiftedChat} from 'react-native-gifted-chat';
 import NavigationBar from './NavigationBar/NavigationBar';
 
-const { height, width } = Dimensions.get('window');
-const totalSize = num => (Math.sqrt((height * height) + (width * width)) * num) / 100;
+const {height, width} = Dimensions.get('window');
+const totalSize = num =>
+  (Math.sqrt(height * height + width * width) * num) / 100;
 
 export default class Chat extends React.Component {
   constructor(props) {
@@ -26,7 +27,10 @@ export default class Chat extends React.Component {
     GLOBAL.visitorSDK.on('new_message', this.handleNewMessage.bind(this));
     GLOBAL.visitorSDK.on('agent_changed', this.handleAgentChanged.bind(this));
     GLOBAL.visitorSDK.on('status_changed', this.handleStateChange.bind(this));
-    GLOBAL.visitorSDK.on('typing_indicator', this.handleTypingIndicator.bind(this));
+    GLOBAL.visitorSDK.on(
+      'typing_indicator',
+      this.handleTypingIndicator.bind(this),
+    );
     GLOBAL.visitorSDK.on('chat_ended', this.handleChatEnded.bind(this));
     GLOBAL.visitorSDK.on('visitor_data', this.hendleVisitorData.bind(this));
 
@@ -36,64 +40,72 @@ export default class Chat extends React.Component {
   }
 
   getVisitor = () => {
-    const visitorId = Object.keys(this.state.users).find(userId => this.state.users[userId].type === 'visitor');
+    const visitorId = Object.keys(this.state.users).find(
+      userId => this.state.users[userId].type === 'visitor',
+    );
     return this.state.users[visitorId];
   };
 
-  handleNewMessage = (newMessage) => {
+  handleNewMessage = newMessage => {
     this.addMessage(newMessage);
   };
 
-  addMessage = (message) => {
+  addMessage = message => {
     this.setState({
-      messages: [{
-        text: message.text,
-        _id: message.id,
-        createdAt: message.timestamp,
-        user: this.state.users[message.authorId],
-      }, ...this.state.messages],
+      messages: [
+        {
+          text: message.text,
+          _id: message.id,
+          createdAt: message.timestamp,
+          user: this.state.users[message.authorId],
+        },
+        ...this.state.messages,
+      ],
     });
   };
 
-  handleAgentChanged = (newAgent) => {
+  handleAgentChanged = newAgent => {
     this.addUser(newAgent, 'agent');
   };
 
-  hendleVisitorData = (visitorData) => {
+  hendleVisitorData = visitorData => {
     this.addUser(visitorData, 'visitor');
   };
 
-  handleStateChange = (statusData) => {
+  handleStateChange = statusData => {
     this.setState({
       onlineStatus: statusData.status === 'online',
     });
   };
 
-  handleInputTextChange = (text) => {
-    GLOBAL.visitorSDK.setSneakPeek({ text });
+  handleInputTextChange = text => {
+    GLOBAL.visitorSDK.setSneakPeek({text});
   };
 
   handleChatEnded = () => {
     this.setState({
-      messages: [{
-        text: 'Chat is closed',
-        _id: String(Math.random()),
-        createdAt: Date.now(),
-        user: {
-          _id: 'system',
+      messages: [
+        {
+          text: 'Chat is closed',
+          _id: String(Math.random()),
+          createdAt: Date.now(),
+          user: {
+            _id: 'system',
+          },
         },
-      }, ...this.state.messages],
+        ...this.state.messages,
+      ],
     });
   };
 
-  handleSend = (messages) => {
+  handleSend = messages => {
     GLOBAL.visitorSDK.sendMessage({
       customId: String(Math.random()),
       text: messages[0].text,
     });
   };
 
-  handleTypingIndicator = (typingData) => {
+  handleTypingIndicator = typingData => {
     this.setState({
       typingText: typingData.isTyping ? 'Agent is typing...' : null,
     });
@@ -122,9 +134,7 @@ export default class Chat extends React.Component {
     if (this.state.typingText) {
       return (
         <View style={styles.footerContainer}>
-          <Text style={styles.footerText}>
-            {this.state.typingText}
-          </Text>
+          <Text style={styles.footerText}>{this.state.typingText}</Text>
         </View>
       );
     }
@@ -133,15 +143,27 @@ export default class Chat extends React.Component {
 
   render() {
     if (this.props.isChatOn) {
+      const props = this.props.chatAnimation
+        ? {animation: this.props.chatAnimation}
+        : {};
       return (
         <View
-          animation="lightSpeedIn"
           style={styles.container}
-          ref={(ref) => { this.chat = ref; }}
+          ref={ref => {
+            this.chat = ref;
+          }}
+          {...props}
         >
-          <NavigationBar chatTitle={this.props.chatTitle} closeChat={this.closeChat} />
+          {this.props.showNavigationBar ? (
+            <NavigationBar
+              chatTitle={this.props.chatTitle}
+              closeChat={this.closeChat}
+            />
+          ) : null}
           <Text style={styles.status}>
-            { this.state.onlineStatus ? this.props.greeting : this.props.noAgents }
+            {this.state.onlineStatus
+              ? this.props.greeting
+              : this.props.noAgents}
           </Text>
           <GiftedChat
             messages={this.state.messages}
@@ -168,16 +190,8 @@ Chat.propTypes = {
 };
 
 const styles = StyleSheet.create({
-  hide: {
-    width: 0,
-    height: 0,
-    position: 'absolute',
-  },
   container: {
-    width,
-    height: Platform.OS === 'ios' ? height : height - height / 25,
-    position: 'absolute',
-    flexDirection: 'column',
+    flex: 1,
     backgroundColor: '#fff',
   },
   navigation: {

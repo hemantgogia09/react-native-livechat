@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { View, Dimensions, StyleSheet, Image, Platform } from 'react-native';
+import React, {Component} from 'react';
+import {View, Dimensions, StyleSheet, Image, Platform} from 'react-native';
 import PropTypes from 'prop-types';
 import ChatBubble from './ChatBubble/ChatBubble';
 import Chat from './Chat/Chat';
-import {init} from "@livechat/livechat-visitor-sdk";
+import {init} from '@livechat/livechat-visitor-sdk';
 
 const chatIcon = require('../assets/chat.png');
 
-const { height, width } = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 
 export default class LiveChat extends Component {
   constructor(props) {
@@ -15,7 +15,9 @@ export default class LiveChat extends Component {
     this.defineStyles();
     this.state = {
       isChatOn: false,
-      bubble: props.bubble ? props.bubble : (
+      bubble: props.bubble ? (
+        props.bubble
+      ) : (
         <View style={this.styles.bubbleStyle}>
           <Image source={chatIcon} style={this.styles.icon} />
         </View>
@@ -24,10 +26,13 @@ export default class LiveChat extends Component {
     if (!GLOBAL.visitorSDK) {
       GLOBAL.visitorSDK = init({
         license: props.license,
-        group: props.group
+        group: props.group,
       });
     }
     props.onLoaded(GLOBAL.visitorSDK);
+    if (!props.showBubble) {
+      this.openChat();
+    }
   }
 
   defineStyles() {
@@ -41,33 +46,40 @@ export default class LiveChat extends Component {
         justifyContent: 'center',
       },
       icon: {
-        width: width / 7, height: width / 7,
+        width: width / 7,
+        height: width / 7,
       },
       container: {
-        position: 'absolute',
+        flex: 1,
       },
     });
   }
 
   openChat = () => {
-    this.setState({ isChatOn: true });
+    this.setState({isChatOn: true});
   };
 
   closeChat = () => {
-    this.setState({ isChatOn: false });
+    this.setState({isChatOn: false});
   };
 
   render() {
     return (
       <View style={this.styles.container}>
-        <ChatBubble
-          left={this.props.bubbleLeft}
-          top={this.props.bubbleTop}
-          openChat={this.openChat}
-          bubble={this.state.bubble}
-          disabled={this.props.movable}
+        {this.props.showBubble ? (
+          <ChatBubble
+            left={this.props.bubbleLeft}
+            top={this.props.bubbleTop}
+            openChat={this.openChat}
+            bubble={this.state.bubble}
+            disabled={this.props.movable}
+          />
+        ) : null}
+        <Chat
+          {...this.props}
+          isChatOn={this.state.isChatOn}
+          closeChat={this.closeChat}
         />
-        <Chat {...this.props} isChatOn={this.state.isChatOn} closeChat={this.closeChat} />
       </View>
     );
   }
@@ -85,15 +97,24 @@ LiveChat.propTypes = {
   greeting: PropTypes.string,
   noAgents: PropTypes.string,
   onLoaded: PropTypes.func,
+  chatAnimation: PropTypes.string,
+  showNavigationBar: PropTypes.bool,
+  showBubble: PropTypes.bool,
 };
 
 LiveChat.defaultProps = {
   bubbleColor: '#2196F3',
   movable: true,
   onLoaded: () => {},
-  bubbleLeft: width - (width / 5) - (width / 50),
-  bubbleTop: Platform.OS === 'ios' ? height - (width / 5) - (width / 50) : height - (width / 5) - (width / 13),
+  bubbleLeft: width - width / 5 - width / 50,
+  bubbleTop:
+    Platform.OS === 'ios'
+      ? height - width / 5 - width / 50
+      : height - width / 5 - width / 13,
   chatTitle: 'Chat with us!',
   greeting: 'Welcome to our LiveChat!\nHow may We help you?',
   noAgents: 'Our agents are not available right now.',
+  chatAnimation: null,
+  showNavigationBar: false,
+  showBubble: false,
 };
