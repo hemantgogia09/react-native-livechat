@@ -66,14 +66,14 @@ export default class Chat extends React.Component {
 
   handleAgentChanged = newAgent => {
     this.addUser(newAgent, 'agent');
-    if (this.props.showGreetingBubble) {
-      this.addMessage({
-        id: '1',
-        timestamp: +new Date(),
-        authorId: newAgent.id,
-        text: this.props.greeting,
-      });
-    }
+    // if (this.props.showGreetingBubble) {
+    //   this.addMessage({
+    //     id: '1',
+    //     timestamp: +new Date(),
+    //     authorId: newAgent.id,
+    //     text: this.props.greeting,
+    //   });
+    // }
   };
 
   hendleVisitorData = visitorData => {
