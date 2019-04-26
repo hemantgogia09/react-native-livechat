@@ -89,7 +89,7 @@ export default class LiveChat extends Component {
 }
 
 LiveChat.propTypes = {
-  license: PropTypes.number.isRequired,
+  license: PropTypes.string.isRequired,
   group: PropTypes.number,
   movable: PropTypes.bool,
   bubble: PropTypes.element,

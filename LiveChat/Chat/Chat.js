@@ -181,7 +181,7 @@ export default class Chat extends React.Component {
 }
 
 Chat.propTypes = {
-  license: PropTypes.number.isRequired,
+  license: PropTypes.string.isRequired,
   chatTitle: PropTypes.string.isRequired,
   closeChat: PropTypes.func.isRequired,
   isChatOn: PropTypes.bool.isRequired,
