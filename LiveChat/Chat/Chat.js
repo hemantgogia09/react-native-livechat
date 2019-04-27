@@ -126,7 +126,7 @@ export default class Chat extends React.Component {
           _id: newUser.id,
           type: type,
           name: newUser.name || newUser.type,
-          avatar: newUser.avatarUrl ? 'https://' + newUser.avatarUrl : null,
+          avatar: newUser.avatarUrl,
         },
       }),
     });

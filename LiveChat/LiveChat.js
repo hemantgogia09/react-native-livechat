@@ -3,7 +3,8 @@ import {View, Dimensions, StyleSheet, Image, Platform} from 'react-native';
 import PropTypes from 'prop-types';
 import ChatBubble from './ChatBubble/ChatBubble';
 import Chat from './Chat/Chat';
-import {init} from '@livechat/livechat-visitor-sdk';
+GLOBAL.cookie = '';
+import {init} from './livechat-visitor-sdk.min.js';
 
 const chatIcon = require('../assets/chat.png');
 
@@ -12,6 +13,7 @@ const {height, width} = Dimensions.get('window');
 export default class LiveChat extends Component {
   constructor(props) {
     super(props);
+    GLOBAL.cookie = '';
     this.defineStyles();
     this.state = {
       isChatOn: false,
