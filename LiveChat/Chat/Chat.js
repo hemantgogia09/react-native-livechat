@@ -15,7 +15,7 @@ export default class Chat extends React.Component {
     super(props);
     this.state = {
       messages: [],
-      onlineStatus: false,
+      onlineStatus: undefined,
       typingText: null,
       users: {
         system: {
@@ -184,9 +184,11 @@ export default class Chat extends React.Component {
               closeChat={this.closeChat}
             />
           ) : null}
-          {!this.props.showGreetingBubble ? (
+          {this.props.showGreetingBubble && this.state.messages.length == 0 ? (
             <Text style={styles.status}>
-              {this.state.onlineStatus
+              {this.state.onlineStatus === undefined
+                ? null
+                : this.state.onlineStatus
                 ? this.props.greeting
                 : this.props.noAgents}
             </Text>
