@@ -218,6 +218,7 @@ Chat.propTypes = {
   greeting: PropTypes.string.isRequired,
   noAgents: PropTypes.string.isRequired,
   showGreetingBubble: PropTypes.bool.isRequired,
+  placeholder: PropTypes.string.isRequired,
 };
 
 const styles = StyleSheet.create({

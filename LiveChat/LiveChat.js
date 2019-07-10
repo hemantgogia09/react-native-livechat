@@ -118,6 +118,7 @@ LiveChat.propTypes = {
   showNavigationBar: PropTypes.bool,
   showBubble: PropTypes.bool,
   showGreetingBubble: PropTypes.bool,
+  placeholder: PropTypes.string,
 };
 
 LiveChat.defaultProps = {
@@ -136,4 +137,5 @@ LiveChat.defaultProps = {
   showNavigationBar: false,
   showBubble: false,
   showGreetingBubble: false,
+  placeholder: 'Type a message...',
 };
