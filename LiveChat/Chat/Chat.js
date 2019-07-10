@@ -107,10 +107,26 @@ export default class Chat extends React.Component {
   };
 
   handleSend = messages => {
-    GLOBAL.visitorSDK.sendMessage({
-      customId: String(Math.random()),
-      text: messages[0].text,
-    });
+    GLOBAL.visitorSDK
+      .sendMessage({
+        customId: String(Math.random()),
+        text: messages[0].text,
+      })
+      .catch(error => {
+        this.setState({
+          messages: [
+            {
+              text: 'Chat is offline',
+              _id: String(Math.random()),
+              createdAt: Date.now(),
+              user: {
+                _id: 'system',
+              },
+            },
+            ...this.state.messages,
+          ],
+        });
+      });
   };
 
   handleTypingIndicator = typingData => {
