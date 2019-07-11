@@ -66,6 +66,13 @@ export default class Chat extends React.Component {
 
   handleAgentChanged = newAgent => {
     this.addUser(newAgent, 'agent');
+    // remove greeting
+    if (this.state.messages.length === 1 && this.props.showGreetingBubble) {
+      // if only system message
+      if (this.state.messages[0].user._id === 'system') {
+        this.setState({messages: []});
+      }
+    }
     // if (this.props.showGreetingBubble) {
     //   this.addMessage({
     //     id: '1',
@@ -84,6 +91,24 @@ export default class Chat extends React.Component {
     this.setState({
       onlineStatus: statusData.status === 'online',
     });
+    if (this.props.showGreetingBubble && this.state.messages.length == 0) {
+      this.setState({
+        messages: [
+          {
+            text:
+              statusData.status === 'online'
+                ? this.props.greeting
+                : this.props.noAgents,
+            _id: String(Math.random()),
+            createdAt: Date.now(),
+            user: {
+              _id: 'system',
+            },
+          },
+          ...this.state.messages,
+        ],
+      });
+    }
   };
 
   handleInputTextChange = text => {
@@ -184,7 +209,7 @@ export default class Chat extends React.Component {
               closeChat={this.closeChat}
             />
           ) : null}
-          {this.props.showGreetingBubble && this.state.messages.length == 0 ? (
+          {this.props.showGreetingHeader && this.state.messages.length == 0 ? (
             <Text style={styles.status}>
               {this.state.onlineStatus === undefined
                 ? null
@@ -218,6 +243,7 @@ Chat.propTypes = {
   greeting: PropTypes.string.isRequired,
   noAgents: PropTypes.string.isRequired,
   showGreetingBubble: PropTypes.bool.isRequired,
+  showGreetingHeader: PropTypes.bool.isRequired,
   placeholder: PropTypes.string.isRequired,
 };
 
