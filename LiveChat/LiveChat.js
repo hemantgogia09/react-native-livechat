@@ -63,6 +63,7 @@ export default class LiveChat extends Component {
 
   openChat = () => {
     this.setState({isChatOn: true});
+    GLOBAL.visitorSDK.startChat();
   };
 
   closeChat = () => {
